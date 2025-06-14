@@ -67,6 +67,12 @@ export default function ChildDetailPage() {
       console.log(`Usuario autenticado: ${user.full_name}`);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (children.length > 0) {
+      console.log(`Número de niños: ${children.length}`);
+    }
+  }, [children]);
   
   useEffect(() => {
     if (childId && !childLoading) {
