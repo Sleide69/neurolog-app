@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import React from 'react';
 
 // ================================================================
 // COMPONENTES AUXILIARES
@@ -189,6 +190,19 @@ function ChildCard({ child, onEdit, onViewDetails, onManageUsers }: ChildCardPro
   );
 }
 
+
+function LoadingIndicator() {
+  return (
+    <div className="flex items-center justify-center min-h-[400px]">
+      <div className="text-center">
+        <UsersIcon className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+        <p className="text-gray-500">Cargando...</p>
+      </div>
+    </div>
+  );
+}
+
+
 interface FiltersCardProps {
   filters: ChildFilters;
   onFiltersChange: (filters: ChildFilters) => void;
@@ -303,7 +317,51 @@ export default function ChildrenPage() {
       </div>
     );
   }
-
+  const renderContent = () => {
+    if (error) {
+      return (
+        <Card>
+          <CardContent className="text-center py-12">
+            <p className="text-red-600 mb-4">Error al cargar los niños: {error}</p>
+            <Button variant="outline" onClick={() => window.location.reload()}>
+              <RefreshCwIcon className="h-4 w-4 mr-2" />
+              Reintentar
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+  
+    if (filteredChildren.length === 0) {
+      return (
+        <Card>
+          <CardContent className="text-center py-12">
+            <UsersIcon className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+            {children.length === 0 ? (
+              <>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No hay niños registrados
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Comienza agregando el primer niño para empezar el seguimiento
+                </p>
+                <Button asChild>
+                  <Link href="/dashboard/children/new">Agregar niño</Link>
+                </Button>
+              </>
+            ) : (
+              <p className="text-gray-600">No hay resultados para los filtros aplicados.</p>
+            )}
+          </CardContent>
+        </Card>
+      );
+    }
+  
+    return null; // Si no hay error ni niños filtrados, no se renderiza nada.
+  };
+  
+  return <>{renderContent()}</>;
+  
   return (
     <div className="space-y-6">
       {/* Header con botón de crear niño */}
