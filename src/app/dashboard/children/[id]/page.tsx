@@ -63,6 +63,12 @@ export default function ChildDetailPage() {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
+    if (user) {
+      console.log(`Usuario autenticado: ${user.full_name}`);
+    }
+  }, [user]);
+  
+  useEffect(() => {
     if (childId && !childLoading) {
       const foundChild = getChildById(childId);
       setChild(foundChild || null);
